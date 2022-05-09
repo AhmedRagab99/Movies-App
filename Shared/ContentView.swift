@@ -8,59 +8,43 @@
 import SwiftUI
 
 
+
+enum MoviesViewModelFactory{
+    static func getMoviesViewModel() -> MoviesViewModel{
+        let movieRepo:MoviesRepoProtocol = MoviesRepo()
+        let moviesViewModel = MoviesViewModel(movieRepo: movieRepo)
+        return moviesViewModel
+    }
+}
 struct ContentView: View {
-    @StateObject var viewModel = MoviesViewModel()
+    @StateObject var viewModel = MoviesViewModelFactory.getMoviesViewModel()
     var body: some View{
         NavigationView{
-        ScrollView(.horizontal, showsIndicators: false){
-        
-//        List{
-            HStack{
-                ForEach(movies){ movie in
-                    MovieItem(movie: movie)
-                        .frame(maxWidth:200,maxHeight: 250)
-                        .cornerRadius(20)
-                        .padding()
+            ScrollView(.horizontal, showsIndicators: false){
+                HStack{
+                    ForEach(viewModel.sections.first?.movies ?? []){ movie in
                         
+                        MovieItem(movie: movie)
+                            .frame(maxWidth:200,maxHeight: 250)
+                            .cornerRadius(20)
+                            .padding()
+                        
+                    }
                 }
             }
-        }
-        .task {
-            await loadTask()
-        }
-        .overlay{overlayView}
-    }
-    }
-    
-    
-    @ViewBuilder
-    private var overlayView:some View {
-        switch viewModel.phaseState{
-        case .empty:
-            ProgressView()
-        case .failure(let error):
-            RetryView(text: error.localizedDescription){
+            .task {
+                await loadTask()
+            }
+            .overlay{DataFetcherOverlayView(phase: viewModel.phaseState) {
                 Task{
-                await retryAction()
+                    await retryAction()
                 }
-            }
-        case .success(let movies) where movies.isEmpty:
-            EmptyPlaceholderView(text: "No Movies", image: Image("test.png"))
-        
-        default: EmptyView()
-        }
-    }
-    
-    private var movies: [Movie] {
-        if case let .success(movies) = viewModel.phaseState {
-            return movies
-        } else {
-            return []
+            }}
         }
     }
     
     private func retryAction() async{
-    print("retry one")
+        print("retry one")
         await viewModel.fetchMovies(endPoint: .latest)
     }
     
@@ -74,7 +58,7 @@ struct ContentView: View {
 
 
 struct MovieItem:View{
-
+    
     let movie:Movie
     var body: some View {
         

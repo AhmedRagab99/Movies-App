@@ -1,33 +1,34 @@
 //
 //  MoviesViewModel.swift
-//  MoviesApp (iOS)
-//
+//  MoviesApp
 //  Created by Ahmed Ragab on 09/05/2022.
 //
 
 import Foundation
 
-
-enum DataFetchPhase<T> {
-    case empty
-    case success(T)
-    case failure(Error)
-}
-
 class MoviesViewModel:ObservableObject{
-    @Published var movies:[Movie] = []
-    @Published var phaseState:DataFetchPhase<[Movie]> = .empty
-    private lazy var movieRepo:MoviesRepoProtocol = MoviesRepo()
+    @Published var phaseState:DataFetchPhase<[MovieSection]> = .empty
+    private  var movieRepo:MoviesRepoProtocol?
     
+    init(movieRepo:MoviesRepoProtocol) {
+        self.movieRepo = movieRepo
+    }
+    var sections: [MovieSection] {
+        phaseState.value ?? []
+    }
     @MainActor func fetchMovies(endPoint:MovieListEndPoints) async {
         self.phaseState = .empty
-        do{
-            let movies = try await self.movieRepo.fetchMovies(from: endPoint)
-            self.movies = movies
-            self.phaseState = .success(movies)
-        } catch (let error){
-            self.phaseState = .failure(error)
-            print("error from view model",error.localizedDescription)
+        if var movieRepo = movieRepo {
+            
+            
+            do{
+                let movies = try await movieRepo.fetchMovies(from: endPoint)
+                
+                self.phaseState = .success([MovieSection(movies: movies, endpoint: endPoint)])
+            } catch (let error){
+                self.phaseState = .failure(error)
+                print("error from view model",error.localizedDescription)
+            }
         }
     }
 }

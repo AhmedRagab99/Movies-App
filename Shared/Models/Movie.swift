@@ -1,6 +1,6 @@
 //
 //  Movie.swift
-//  MoviesApp (iOS)
+//  MoviesApp 
 //
 //  Created by Ahmed Ragab on 08/05/2022.
 //
@@ -109,45 +109,3 @@ struct Movie: Codable, Identifiable, Hashable {
     
 }
 
-
-
-
-// for using data in preview
-
-extension Movie {
-    
-    static var stubbedMovies: [Movie] {
-        let response: MovieResponse? = try? Bundle.main.loadAndDecodeJSON(filename: "Movie-list")
-        return response!.results
-    }
-    
-    static var stubbedMovie: Movie {
-        stubbedMovies[0]
-    }
-    
-}
-
-
-struct MovieSection: Identifiable {
-    
-    let id = UUID()
-    
-    let movies: [Movie]
-    let endpoint: MovieListEndPoints
-    var title: String {
-        endpoint.description
-    }
-
-}
-
-extension MovieSection {
-    
-    static var stubs: [MovieSection] {
-        
-        let stubbedMovies = Movie.stubbedMovies
-        return MovieListEndPoints.allCases.map {
-            MovieSection(movies: stubbedMovies.shuffled(), endpoint: $0)
-        }
-    }
-    
-}

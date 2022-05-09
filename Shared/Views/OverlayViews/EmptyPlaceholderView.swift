@@ -1,6 +1,6 @@
 //
 //  EmptyPlaceholderView.swift
-
+//  MoviesApp
 //
 //  Created by Ahmed Ragab on 09/05/2022.
 //
@@ -22,7 +22,7 @@ struct EmptyPlaceholderView: View {
             }
             Text(text)
             Spacer()
-        }.background(Color.green)
+        }
     }
 }
 
