@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-struct MovieCustomCardView: View {
+struct CustomCardView: View {
     let movie:Movie
+    
     var body: some View {
-        VStack(alignment: .center) {
+        
             ZStack {
                 
                 AsyncImageView(imageUrl: movie.posterURL)
@@ -21,17 +22,13 @@ struct MovieCustomCardView: View {
             
             .cornerRadius(8)
             .shadow(radius: 4)
-            .padding()
-            
-            Text(movie.title ?? "")
-                .fontWeight(.semibold)
-        }
-        .lineLimit(1)
+            .padding(.horizontal)
+
     }
 }
 
 struct MovieCustomCardView_Previews: PreviewProvider {
     static var previews: some View {
-        MovieCustomCardView(movie: .stubbedMovie)
+        CustomCardView(movie: .stubbedMovie)
     }
 }

@@ -56,17 +56,23 @@ struct MovieSectionView: View {
 
         switch section.endpoint{
         case .popular:
-            MovieCustomCardView(movie: movie)
+            CustomCardView(movie: movie)
             
         case .topRated:
-            MoviePoseterView(movie: movie)
+            BackDropCardView(movie: movie)
+                .aspectRatio(16/9, contentMode: .fit)
+                .frame(height: 160)
+           
 
         case .upcoming:
-            MoviePosterCard(movie: movie)
+            CustomCardView(movie: movie)
+                .frame(height: 180)
 
-    
         case .nowPlaying:
-            MoviePoseterView(movie: movie)
+            PosterCardView(movie: movie)
+
+            
+                
 
          
         }

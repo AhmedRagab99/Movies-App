@@ -7,18 +7,29 @@
 
 import SwiftUI
 
-struct MoviePosterCard: View {
+struct BackDropCardView: View {
     let movie:Movie
+    @Environment (\.horizontalSizeClass) private var horizontalClass
 
     var body: some View {
-//        ZStack {
+        
+
+        VStack(alignment: .leading, spacing: 8) {
             AsyncImageView(imageUrl: movie.posterURL)
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth:.infinity,maxHeight: 180)
+                
+                
+
                     .cornerRadius(8)
                     .shadow(radius: 4)
-//        }
-//        .padding(.horizontal)
+            if horizontalClass != .regular{
+            Text(movie.title ?? "")
+                .font(.headline)
+                .lineLimit(1)
+            }
+        }
+     
+      
+           
 //        .aspectRatio(16/9, contentMode: .fit)
         
     }
@@ -27,6 +38,6 @@ struct MoviePosterCard: View {
 
 struct MoviePosterCard_Previews: PreviewProvider {
     static var previews: some View {
-        MoviePosterCard(movie: .stubbedMovie)
+        BackDropCardView(movie: .stubbedMovie)
     }
 }

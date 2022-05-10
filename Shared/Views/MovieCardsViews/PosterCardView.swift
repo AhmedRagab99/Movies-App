@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MoviePoseterView: View {
+struct PosterCardView: View {
     let movie:Movie
     private let width = UIScreen.main.bounds.width
     private let height = UIScreen.main.bounds.width * 0.6
@@ -48,7 +48,7 @@ struct MoviePoseterView_Previews: PreviewProvider {
             HStack {
                 
                 ForEach(0 ..< 20) { item in
-                    MoviePoseterView(movie: .stubbedMovies[item])
+                    PosterCardView(movie: .stubbedMovies[item])
                     
                     
                 }
