@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 enum MoviesViewModelFactory{
     static func getMoviesViewModel() -> MoviesViewModel{
         let movieRepo:MoviesRepoProtocol = MoviesRepo()
@@ -16,69 +14,68 @@ enum MoviesViewModelFactory{
         return moviesViewModel
     }
 }
+
+
 struct ContentView: View {
     @StateObject var viewModel = MoviesViewModelFactory.getMoviesViewModel()
     var body: some View{
         NavigationView{
-            ScrollView(.horizontal, showsIndicators: false){
-                HStack{
-                    ForEach(viewModel.sections.first?.movies ?? []){ movie in
+            RefreshableScrollView(title: "Pull Down", tintColor: .purple, content: {
+                ScrollView(.vertical, showsIndicators: false){
+                    
+                    
+                    ForEach(viewModel.sections) { item in
                         
-                        MovieItem(movie: movie)
-                            .frame(maxWidth:200,maxHeight: 250)
-                            .cornerRadius(20)
+                        
+                        MovieSectionView(section: item)
                             .padding()
-                        
                     }
+                    
                 }
-            }
+                
+                
+            }, onRefresh: {
+                loadTask(invalidateCache: true)
+            })
             .task {
-                await loadTask()
+                loadTask(invalidateCache: false)
             }
+            
+            .navigationTitle("News APP")
             .overlay{DataFetcherOverlayView(phase: viewModel.phaseState) {
-                Task{
-                    await retryAction()
-                }
+                
+                    loadTask(invalidateCache: true)
+                
             }}
+           
         }
     }
-    
-    private func retryAction() async{
-        print("retry one")
-        await viewModel.fetchMovies(endPoint: .latest)
-    }
-    
     @Sendable
-    private func loadTask() async {
-        await viewModel.fetchMovies(endPoint: .nowPlaying)
+    private func loadTask(invalidateCache:Bool)  {
+        Task{
+            await viewModel.loadMoviesFromAllEndpoints(invalidateCache: invalidateCache)
+        }
     }
-    
 }
 
 
 
 struct MovieItem:View{
-    
-    let movie:Movie
+    let section:MovieSection
     var body: some View {
-        
-        VStack(){
-            AsyncImage(url: movie.posterURL) { phase  in
-                switch phase{
-                case .empty:
-                    ProgressView()
-                case .failure:
-                    Image(systemName: "photo")
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                @unknown default:
-                    fatalError()
+        ScrollView(.horizontal,showsIndicators: false){
+            HStack {
+                ForEach(section.movies){ item in
+                    VStack(){
+                        AsyncImageView(imageUrl: item.posterURL)
+                            .frame(maxWidth:200,maxHeight: 200)
+                            .padding()
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                    }
                 }
             }
         }
-        
     }
 }
 
@@ -86,10 +83,18 @@ struct MovieItem:View{
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        List{
-            MovieItem(movie: .stubbedMovie)
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listStyle(.plain)
+        NavigationView{
+            ScrollView(.vertical, showsIndicators: false){
+                
+                
+                ForEach(MovieSection.stubs) { item in
+                    
+                    
+                    MovieSectionView(section: item)
+                        .padding()
+                }
+            }
+            .navigationTitle("News APP")
         }
     }
 }

@@ -32,6 +32,9 @@ class MoviesAppBaseStore:MoviesAppBaseStoreProtocol{
         let (data,response) = try await urlSession.data(from:finalUrl)
         
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            
+//            throw   NSError(domain: "error code", code: 123, userInfo: [NSLocalizedDescriptionKey:response])
+            
             throw MoviesAppError.invalidResponse
         }
         do {

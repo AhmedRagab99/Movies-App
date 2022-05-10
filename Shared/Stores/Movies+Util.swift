@@ -15,7 +15,7 @@ enum MovieListEndPoints:String,CaseIterable,Identifiable{
     case upcoming
     case topRated = "top_rated"
     case popular
-    case latest
+    
     
     var description:String{
         switch self {
@@ -27,8 +27,21 @@ enum MovieListEndPoints:String,CaseIterable,Identifiable{
             return "Top Rated"
         case .popular:
             return "Popular"
-        case .latest:
-            return "Latest"
+     
+        }
+    }
+    
+    var sortIndex: Int {
+        switch self {
+        case .nowPlaying:
+            return 2
+        case .upcoming:
+            return 3
+        case .topRated:
+            return 1
+        case .popular:
+            return 0
+    
         }
     }
 }
@@ -39,6 +52,7 @@ enum MoviesAppError:Error,CustomNSError{
     case invalidResponse
     case noData
     case serializationError
+    case geniricError
     
     var localizedDescriptipn:String{
         switch self {
@@ -52,6 +66,8 @@ enum MoviesAppError:Error,CustomNSError{
             return "No data"
         case .serializationError:
             return "Failed to decode data"
+        case .geniricError:
+            return "some thing went wrong"
         }
     }
     var errorUserInfo: [String : Any]{

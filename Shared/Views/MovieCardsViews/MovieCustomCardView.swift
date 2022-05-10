@@ -10,17 +10,21 @@ import SwiftUI
 struct MovieCustomCardView: View {
     let movie:Movie
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             ZStack {
                 Rectangle()
                     .fill(Color.gray.opacity(0.3))
                 AsyncImageView(imageUrl: movie.posterURL)
+                    .frame(maxHeight: 280)
+                    
             }
-            .aspectRatio(16/9, contentMode: .fit)
+            
             .cornerRadius(8)
             .shadow(radius: 4)
+            .padding()
             
             Text(movie.title ?? "")
+                .fontWeight(.semibold)
         }
         .lineLimit(1)
     }

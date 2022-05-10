@@ -15,7 +15,7 @@ struct MoviePoseterView: View {
         
         VStack {
             AsyncImageView(imageUrl: movie.posterURL)
-                .frame(maxWidth: width, maxHeight: height, alignment: .center)
+                .frame(maxWidth:200,maxHeight: 180)
                 .cornerRadius(10)
                 .padding()
                 .shadow(radius: 5)
@@ -23,16 +23,19 @@ struct MoviePoseterView: View {
             
             Text(movie.title ?? "")
                 .foregroundColor(.primary)
-                .font(.headline)
-                .fontWeight(.bold)
-                .lineLimit(2)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.center)
+                
+            
+                
             
             Text(movie.ratingText)
                 .foregroundColor(Color(UIColor.systemYellow))
                 .font(.headline)
             
         }
-        .padding(.horizontal)
+        
         
     }
 }

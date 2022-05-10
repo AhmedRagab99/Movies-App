@@ -8,7 +8,7 @@
 import Foundation
 
 struct MovieResponse:Codable{
-    let results:[Movie]
+    let results:[Movie]?
 }
 
 struct Movie: Codable, Identifiable, Hashable {
@@ -26,7 +26,7 @@ struct Movie: Codable, Identifiable, Hashable {
     let posterPath: String?
     let overview: String
     let voteAverage: Double
-    let voteCount: Int
+    let voteCount: Int?
     let runtime: Int?
     let releaseDate: String?
 

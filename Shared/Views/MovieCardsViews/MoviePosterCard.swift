@@ -9,16 +9,17 @@ import SwiftUI
 
 struct MoviePosterCard: View {
     let movie:Movie
-    private let height = UIScreen.main.bounds.width
-    private let width = UIScreen.main.bounds.width * 0.6
+
     var body: some View {
         ZStack {
 
             AsyncImageView(imageUrl: movie.posterURL)
+                .frame(maxHeight: 180)
                     .cornerRadius(8)
                     .shadow(radius: 4)
-
-        }.frame(width: width, height:height)
+        }
+        .padding(.horizontal)
+//        .aspectRatio(16/9, contentMode: .fit)
         
     }
 }

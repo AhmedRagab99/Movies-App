@@ -16,4 +16,20 @@ struct MovieSection: Identifiable {
     var title: String {
         endpoint.description
     }
+    var thumbnailType: MovieThumbnailType {
+        endpoint.thumbnailType
+    }
+}
+
+fileprivate extension MovieListEndPoints {
+    
+    var thumbnailType: MovieThumbnailType {
+        switch self {
+        case .nowPlaying:
+            return .poster()
+        default:
+            return .backdrop
+        }
+    }
+    
 }
