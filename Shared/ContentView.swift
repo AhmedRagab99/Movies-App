@@ -10,7 +10,8 @@ import SwiftUI
 enum MoviesViewModelFactory{
     static func getMoviesViewModel() -> MoviesViewModel{
         let movieRepo:MoviesRepoProtocol = MoviesRepo()
-        let moviesViewModel = MoviesViewModel(movieRepo: movieRepo)
+        let moviesUseCase = MoviesUseCase(movieRepo: movieRepo)
+        let moviesViewModel = MoviesViewModel(movieUseCase:moviesUseCase)
         return moviesViewModel
     }
 }
