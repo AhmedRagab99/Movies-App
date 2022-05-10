@@ -41,7 +41,20 @@ enum MovieListEndPoints:String,CaseIterable,Identifiable{
             return 1
         case .popular:
             return 0
+        }
+    }
     
+    
+    var systemImage: String {
+        switch self {
+        case .nowPlaying:
+            return "newspaper"
+        case .upcoming:
+            return "building.2"
+        case .topRated:
+            return "desktopcomputer"
+        case .popular:
+            return "tv"
         }
     }
 }

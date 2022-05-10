@@ -17,12 +17,15 @@ class MoviesAppBaseStore:MoviesAppBaseStoreProtocol{
     private let urlSession = URLSession.shared
     
     //MARK: - functions
-    func loadURLAndDecode<D:Codable>(url: URL, params: [String : String]?) async throws -> D {
+    func loadURLAndDecode<D:Codable>(url: URL, params: [String : String]? = nil) async throws -> D {
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             throw MoviesAppError.invalidEndPoints
         }
         
-        var quaryItems = [URLQueryItem(name: "api_key", value: ProcessInfo.processInfo.environment["ApiKey"])]
+        var quaryItems = [URLQueryItem(name: "api_key", value:
+                                       APIKEY
+//                                        ProcessInfo.processInfo.environment["ApiKey"]
+                                      )]
         if let params = params {
             quaryItems.append(contentsOf: params.map{URLQueryItem(name: $0.key, value: $0.value)})
         }

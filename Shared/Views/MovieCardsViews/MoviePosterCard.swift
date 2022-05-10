@@ -11,14 +11,14 @@ struct MoviePosterCard: View {
     let movie:Movie
 
     var body: some View {
-        ZStack {
-
+//        ZStack {
             AsyncImageView(imageUrl: movie.posterURL)
-                .frame(maxHeight: 180)
+                .aspectRatio(contentMode: .fill)
+                .frame(maxWidth:.infinity,maxHeight: 180)
                     .cornerRadius(8)
                     .shadow(radius: 4)
-        }
-        .padding(.horizontal)
+//        }
+//        .padding(.horizontal)
 //        .aspectRatio(16/9, contentMode: .fit)
         
     }

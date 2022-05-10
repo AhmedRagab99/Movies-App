@@ -15,6 +15,7 @@ struct MoviePoseterView: View {
         
         VStack {
             AsyncImageView(imageUrl: movie.posterURL)
+                .aspectRatio(contentMode: .fill)
                 .frame(maxWidth:200,maxHeight: 180)
                 .cornerRadius(10)
                 .padding()

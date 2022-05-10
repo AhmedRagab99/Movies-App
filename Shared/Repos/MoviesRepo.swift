@@ -15,7 +15,7 @@ protocol MoviesRepoProtocol{
 
 class MoviesRepo:MoviesRepoProtocol{
     // MARK: - properties
-    private lazy var movieBaseAppStore:MoviesAppBaseStoreProtocol = MoviesAppBaseStore()
+    private  var movieBaseAppStore:MoviesAppBaseStoreProtocol = MoviesAppBaseStore()
     private let baseEndPointUrl = "\(Utils.BaseApiUrl)/movie/"
     
     // MARK: Functions

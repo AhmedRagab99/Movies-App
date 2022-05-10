@@ -10,24 +10,21 @@ import SwiftUI
 struct AsyncImageView: View {
     let imageUrl:URL
     var body: some View {
-        AsyncImage(url: imageUrl) { phase  in
+        
+        
+        CacheAsyncImage(url: imageUrl, scale: 0.5, transaction: Transaction(animation: .easeInOut)) { phase in
             switch phase{
             case .empty:
-                
-                Rectangle()
-                    
-                    .fill(Color.gray.opacity(0.3))
-                    .cornerRadius(8)
-                    .shadow(radius: 4)
-                    .overlay{ProgressView()}
-                    
+                ProgressView()
+
             case .failure:
                 Image(systemName: "photo")
                     
             case .success(let image):
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    
+                    .transition(.scale(scale: 0.5, anchor: .center))
             @unknown default:
                 fatalError()
             }

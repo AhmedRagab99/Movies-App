@@ -15,51 +15,18 @@ enum MoviesViewModelFactory{
         return moviesViewModel
     }
 }
-
-
-struct ContentView: View {
-    @StateObject var viewModel = MoviesViewModelFactory.getMoviesViewModel()
-    var body: some View{
-        NavigationView{
-            RefreshableScrollView(title: "Pull Down", tintColor: .purple, content: {
-                ScrollView(.vertical, showsIndicators: false){
-                    
-                    
-                    ForEach(viewModel.sections) { item in
-                        
-                        
-                        MovieSectionView(section: item)
-                            .padding()
-                    }
-                    
-                }
-                
-                
-            }, onRefresh: {
-                loadTask(invalidateCache: true)
-            })
-            .task {
-                loadTask(invalidateCache: false)
-            }
-            
-            .navigationTitle("News APP")
-            .overlay{DataFetcherOverlayView(phase: viewModel.phaseState) {
-                
-                    loadTask(invalidateCache: true)
-                
-            }}
-           
-        }
-    }
-    @Sendable
-    private func loadTask(invalidateCache:Bool)  {
-        Task{
-            await viewModel.loadMoviesFromAllEndpoints(invalidateCache: invalidateCache)
+struct ContentView:View{
+    
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    var body: some View {
+        switch horizontalSizeClass {
+        case .regular:
+            SidebarContentView()
+        default:
+            TabsContentView()
         }
     }
 }
-
-
 
 struct MovieItem:View{
     let section:MovieSection
@@ -76,26 +43,6 @@ struct MovieItem:View{
                     }
                 }
             }
-        }
-    }
-}
-
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView{
-            ScrollView(.vertical, showsIndicators: false){
-                
-                
-                ForEach(MovieSection.stubs) { item in
-                    
-                    
-                    MovieSectionView(section: item)
-                        .padding()
-                }
-            }
-            .navigationTitle("News APP")
         }
     }
 }

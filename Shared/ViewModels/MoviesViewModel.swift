@@ -8,6 +8,7 @@ import Foundation
 
 class MoviesViewModel:ObservableObject{
     @Published var phaseState:DataFetchPhase<[MovieSection]> = .empty
+//    @Published var movie
     private  var movieUseCase:MoviesUseCaseProtocol?
     
     init(movieUseCase:MoviesUseCaseProtocol) {
@@ -16,10 +17,6 @@ class MoviesViewModel:ObservableObject{
     var sections: [MovieSection] {
         phaseState.value ?? []
     }
-    
-    
-    
-    
     
     @MainActor func loadMoviesFromAllEndpoints(invalidateCache:Bool) async {
         if Task.isCancelled { return }
@@ -42,15 +39,21 @@ class MoviesViewModel:ObservableObject{
         
     }
     
-    @MainActor func fetchMovies(endPoint:MovieListEndPoints) async {
+    @MainActor func fetchMovies(invalidateCache:Bool,endPoint:MovieListEndPoints) async {
+        if Task.isCancelled { return }
         self.phaseState = .empty
-        if var movieUseCase = movieUseCase {
+        if let movieUseCase = movieUseCase {
             
+            if case .success = phaseState , !invalidateCache{
+                return
+            }
             do{
+                if Task.isCancelled { return }
                 let movies = try await movieUseCase.fetchMovies(from: endPoint)
                 
                 self.phaseState = .success([MovieSection(movies: movies, endpoint: endPoint)])
             } catch (let error){
+                if Task.isCancelled { return }
                 self.phaseState = .failure(error)
                 print("error from view model",error.localizedDescription)
             }

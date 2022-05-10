@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MovieSectionView: View {
     let section:MovieSection
-    @State var selectedText = ""
+    
     var body: some View {
         VStack(spacing:1){
             HStack{
@@ -30,7 +30,7 @@ struct MovieSectionView: View {
                         
                     }
                     .listStyle(.plain)
-                    .searchable(text: $selectedText)
+                    
                 } label: {
                     Text("See More")
                         .font(.headline)
@@ -53,8 +53,7 @@ struct MovieSectionView: View {
     
     @ViewBuilder
     private func createSectionView(section:MovieSection,movie:Movie)-> some View{
-//        private let height = UIScreen.main.bounds.width
-//        private let width = UIScreen.main.bounds.width * 0.6
+
         switch section.endpoint{
         case .popular:
             MovieCustomCardView(movie: movie)

@@ -12,9 +12,9 @@ struct MovieCustomCardView: View {
     var body: some View {
         VStack(alignment: .center) {
             ZStack {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
+                
                 AsyncImageView(imageUrl: movie.posterURL)
+                    .aspectRatio(contentMode: .fill)
                     .frame(maxHeight: 280)
                     
             }

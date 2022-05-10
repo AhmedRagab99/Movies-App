@@ -13,7 +13,8 @@ struct MovieListItemView: View {
     var body: some View {
         HStack(spacing:16){
             AsyncImageView(imageUrl: movie.posterURL)
-    
+                .aspectRatio(contentMode: .fit)
+                .cornerRadius(5)
                 .frame(width: 80, height: 80)
                 .cornerRadius(5)
             VStack(alignment:.leading,spacing:8){
@@ -42,6 +43,7 @@ struct MovieListItemView: View {
         .background(Color(UIColor.clear))
         .cornerRadius(20)
         .shadow(radius: 3)
+        
         
         
     }
