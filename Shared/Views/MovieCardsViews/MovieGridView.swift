@@ -16,6 +16,7 @@ enum UIUserInterfaceIdiom : Int {
 struct MovieGridView: View {
    
     let movies:[Movie]
+    @EnvironmentObject private var movieBookmarkViewModel:MovieBookmarkViewModel
     
     var body: some View {
       
@@ -25,9 +26,12 @@ struct MovieGridView: View {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 300), spacing: 8)]) {
                     ForEach(movies) { item in
                         GeometryReader { proxy in
-                        VStack(spacing:16) {
+                            
+                        VStack(spacing:8) {
                             
                                 BackDropCardView(movie:item)
+                                .frame(height:proxy.frame(in: CoordinateSpace.local).height * 0.4)
+    
 
                             Text(item.title ?? "")
                                 .font(.headline)
@@ -36,9 +40,31 @@ struct MovieGridView: View {
                                 Spacer()
                                 Text(item.overview)
                                     .font(.subheadline)
+                                    .lineLimit(nil)
+                                    
                                 Spacer()
+                                
                             }
                             Spacer()
+                            HStack{
+                                VStack(alignment:.leading) {
+                                    Text("\(item.releaseDate ?? "")")
+                                        .foregroundColor(.gray)
+                                    Text(item.ratingText)
+                                        .foregroundColor(Color.yellow)
+                                }
+                                .padding()
+                                Spacer()
+                                Image(systemName: movieBookmarkViewModel.isBookmarked(for: item) ? "bookmark.fill":"bookmark")
+                                    .onTapGesture{
+                                        withAnimation {
+                                            movieBookmarkViewModel.toggleBookmark(for: item)
+                                        }
+                                    }
+                                    .padding()
+                            }
+                            
+                            
                         }
 
                       }
@@ -46,7 +72,7 @@ struct MovieGridView: View {
                         .frame(minHeight:
                                 UIDevice.current.userInterfaceIdiom == .pad ?
                                360:250,maxHeight:UIScreen.main.bounds.height)
-                    .background(Color(uiColor: .systemBackground))
+                    .background(Color(uiColor: .tertiarySystemBackground))
                     .mask(RoundedRectangle(cornerRadius: 10))
                     .shadow(radius: 4)
                       
@@ -63,8 +89,10 @@ struct MovieGridView: View {
 
 
 struct MovieGridView_Previews: PreviewProvider {
+    @StateObject static var movieBookmarkViewModel = MovieBookmarkViewModel()
     static var previews: some View {
         MovieGridView(movies: Movie.stubbedMovies)
+            .environmentObject(movieBookmarkViewModel)
       
     }
 }

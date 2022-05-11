@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class MovieSearchViewModel:ObservableObject{
+@MainActor class MovieSearchViewModel:ObservableObject{
     
     @Published var phaseState:DataFetchPhase<[Movie]> = .empty
     @Published var query = ""
@@ -25,7 +25,7 @@ class MovieSearchViewModel:ObservableObject{
     }
     
     
-    @MainActor func startObserve() {
+     func startObserve() {
         guard cancellables.isEmpty else { return }
         
         $query
@@ -47,7 +47,7 @@ class MovieSearchViewModel:ObservableObject{
             .store(in: &cancellables)
     }
     
-    func searchMovie(query:String) async {
+     func searchMovie(query:String) async {
         if Task.isCancelled { return }
         
         phaseState = .empty

@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum MoviesViewModelFactory{
-    static func getMoviesViewModel() -> MoviesViewModel{
+    @MainActor static func getMoviesViewModel() -> MoviesViewModel{
         let movieRepo:MoviesRepoProtocol = MoviesRepo()
         let moviesUseCase = MoviesUseCase(movieRepo: movieRepo)
         let moviesViewModel = MoviesViewModel(movieUseCase:moviesUseCase)
@@ -24,25 +24,6 @@ struct ContentView:View{
             SidebarContentView()
         default:
             TabsContentView()
-        }
-    }
-}
-
-struct MovieItem:View{
-    let section:MovieSection
-    var body: some View {
-        ScrollView(.horizontal,showsIndicators: false){
-            HStack {
-                ForEach(section.movies){ item in
-                    VStack(){
-                        AsyncImageView(imageUrl: item.posterURL)
-                            .frame(maxWidth:200,maxHeight: 200)
-                            .padding()
-                            .cornerRadius(10)
-                            .shadow(radius: 5)
-                    }
-                }
-            }
         }
     }
 }

@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct MoviesAppApp: App {
+    @StateObject var movieBookmarkViewModel = MovieBookmarkViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(movieBookmarkViewModel)
         }
     }
 }

@@ -29,6 +29,7 @@ struct HomeMoviesView: View {
         }
     }
     
+    @ViewBuilder
     private var homeGridView:some View{
         RefreshableScrollView(title: "Pull Down", tintColor: .purple) {
             if let section = viewModel.sections.first {
@@ -47,6 +48,7 @@ struct HomeMoviesView: View {
 
     }
     
+    @ViewBuilder
     private var homeListView:some View{
         RefreshableScrollView(title: "Pull Down", tintColor: .purple, content: {
             ScrollView(.vertical, showsIndicators: false){

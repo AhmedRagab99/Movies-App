@@ -45,7 +45,8 @@ struct SidebarContentView: View {
             MovieSearchView()
                 .padding()
         case .saved:
-            Text("BookMark")
+            BookmarkView()
+                .padding()
         case .category(let category):
             HomeMoviesView(endPoint:category)
         }

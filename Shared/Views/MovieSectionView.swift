@@ -14,7 +14,7 @@ struct MovieSectionView: View {
         VStack(spacing:1){
             HStack{
                 Text(section.title)
-                    .font(.headline)
+                    .font(.title)
                     .foregroundColor(.primary)
                     .fontWeight(.bold)
                     .padding()
@@ -41,7 +41,6 @@ struct MovieSectionView: View {
                 HStack {
                     ForEach(0..<section.movies.count) { item in
                         createSectionView(section: section, movie: section.movies[item])
-//                            .padding()
                             .onTapGesture {
                                 
                             }
@@ -62,7 +61,6 @@ struct MovieSectionView: View {
             BackDropCardView(movie: movie)
                 .aspectRatio(16/9, contentMode: .fit)
                 .frame(height: 160)
-           
 
         case .upcoming:
             CustomCardView(movie: movie)
@@ -70,11 +68,6 @@ struct MovieSectionView: View {
 
         case .nowPlaying:
             PosterCardView(movie: movie)
-
-            
-                
-
-         
         }
     }
 }

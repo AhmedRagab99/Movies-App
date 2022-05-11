@@ -10,7 +10,7 @@ import SwiftUI
 
 
 enum MovieSearchFactory{
-    static func getMovieSearchViewModel()-> MovieSearchViewModel{
+    @MainActor static func getMovieSearchViewModel()-> MovieSearchViewModel{
         let repo:MovieSearchRepoProtocol = MovieSearchRepo()
         let useCase:MovieSearchUseCaseProtocol = MovieSearchUseCase(movieSearchRepo: repo)
         let viewModel = MovieSearchViewModel(movieSearchUseCase: useCase)
@@ -44,10 +44,12 @@ struct MovieSearchView: View {
         }
     }
     
+    @ViewBuilder
     private var gridView:some View{
         MovieGridView(movies: viewModel.phaseState.value ?? [])
     }
     
+    @ViewBuilder
     private var listView:some View{
         List {
             ForEach(viewModel.phaseState.value ?? []) { movie in

@@ -16,8 +16,6 @@ struct BackDropCardView: View {
 
         VStack(alignment: .leading, spacing: 8) {
             AsyncImageView(imageUrl: movie.posterURL)
-                
-                
 
                     .cornerRadius(8)
                     .shadow(radius: 4)
@@ -27,11 +25,6 @@ struct BackDropCardView: View {
                 .lineLimit(1)
             }
         }
-     
-      
-           
-//        .aspectRatio(16/9, contentMode: .fit)
-        
     }
 }
 

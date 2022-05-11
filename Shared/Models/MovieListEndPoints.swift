@@ -47,13 +47,13 @@ enum MovieListEndPoints:String,CaseIterable,Identifiable{
     var systemImage: String {
         switch self {
         case .nowPlaying:
-            return "newspaper"
+            return "timer"
         case .upcoming:
-            return "building.2"
-        case .topRated:
-            return "desktopcomputer"
+            return "calendar"
         case .popular:
-            return "tv"
+            return "chart.line.uptrend.xyaxis"
+        case .topRated:
+            return "hands.clap"
         }
     }
 }

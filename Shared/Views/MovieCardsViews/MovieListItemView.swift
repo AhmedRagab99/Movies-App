@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MovieListItemView: View {
     let movie:Movie
+    @EnvironmentObject private var movieBookmarkViewModel:MovieBookmarkViewModel
     
     var body: some View {
         HStack(spacing:16){
@@ -30,31 +31,35 @@ struct MovieListItemView: View {
                 }
             }
             Spacer()
-            Button {
-                print("test here")
-            } label: {
-                Image(systemName: "bookmark")
+
+                Image(systemName: movieBookmarkViewModel.isBookmarked(for: movie) ? "bookmark.fill":"bookmark")
+                .onTapGesture {
+                    withAnimation{
+                    movieBookmarkViewModel.toggleBookmark(for: movie)
+                    }
+                }
                 
                 
-            }.padding(.horizontal)
+//            }.padding(.horizontal)
             
         }
         //        .padding()
         .background(Color(UIColor.clear))
         .cornerRadius(20)
         .shadow(radius: 3)
-        
-        
-        
+
     }
 }
 
 struct MovieListItemView_Previews: PreviewProvider {
+    @StateObject static var movieBookmarkViewModel = MovieBookmarkViewModel()
     static var previews: some View {
         List(0 ..< 12) { item in
             MovieListItemView(movie: .stubbedMovies[item])
                 .frame(width:.infinity)
         }
         .listStyle(.plain)
+        .environmentObject(movieBookmarkViewModel)
+        
     }
 }

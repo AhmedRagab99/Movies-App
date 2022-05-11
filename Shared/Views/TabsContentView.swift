@@ -37,11 +37,12 @@ struct TabsContentView:View{
             
             
             NavigationView{
-                Text("Book Mark tab")
+                BookmarkView()
+                    .navigationTitle("Saved Movies")
             }
             .tabItem {
                 VStack {
-                    Image(systemName: "magnifyingglass")
+                    Image(systemName: "bookmark")
                     Text("BookMark")
                 }
                 
@@ -52,7 +53,9 @@ struct TabsContentView:View{
 }
 
 struct TabsContentView_Previews: PreviewProvider {
+    @StateObject static var movieBookmarkViewModel = MovieBookmarkViewModel()
     static var previews: some View {
         TabsContentView()
+            .environmentObject(movieBookmarkViewModel)
     }
 }
