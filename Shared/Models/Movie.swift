@@ -78,34 +78,12 @@ struct Movie: Codable, Identifiable, Hashable {
     
     var durationText: String {
         guard let runtime = self.runtime, runtime > 0 else {
-            return "n/a"
+            return "\(runtime)"
         }
         return Movie.durationFormatter.string(from: TimeInterval(runtime) * 60) ?? "n/a"
     }
     
-//    var cast: [MovieCast]? {
-//        credits?.cast
-//    }
-//
-//    var crew: [MovieCrew]? {
-//        credits?.crew
-//    }
-//
-//    var directors: [MovieCrew]? {
-//        crew?.filter { $0.job.lowercased() == "director" }
-//    }
-//
-//    var producers: [MovieCrew]? {
-//        crew?.filter { $0.job.lowercased() == "producer" }
-//    }
-//
-//    var screenWriters: [MovieCrew]? {
-//        crew?.filter { $0.job.lowercased() == "story" }
-//    }
-//
-//    var youtubeTrailers: [MovieVideo]? {
-//        videos?.results.filter { $0.youtubeURL != nil }
-//    }
+    
     
 }
 

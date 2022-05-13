@@ -47,16 +47,18 @@ struct MovieSearchView: View {
     @ViewBuilder
     private var gridView:some View{
         MovieGridView(movies: viewModel.phaseState.value ?? [])
+            .padding()
+            
     }
     
     @ViewBuilder
     private var listView:some View{
         List {
             ForEach(viewModel.phaseState.value ?? []) { movie in
-                NavigationLink(destination: Text("test navigation")) {
+                
                     MovieListItemView(movie: movie)
-                        .padding()
-                }
+                    .padding()
+                
             }
             
         }

@@ -24,8 +24,12 @@ struct MovieSectionView: View {
                     List{
                         ForEach(section.movies) { item in
                             
-                            MovieListItemView(movie: item)
-                                .padding()
+                            
+                                MovieListItemView(movie: item)
+                                    .padding()
+                            
+
+                            
                         }
                         
                     }
@@ -40,10 +44,13 @@ struct MovieSectionView: View {
             ScrollView(.horizontal,showsIndicators: false){
                 HStack {
                     ForEach(0..<section.movies.count) { item in
-                        createSectionView(section: section, movie: section.movies[item])
-                            .onTapGesture {
-                                
+                        
+                            createSectionView(section: section, movie: section.movies[item])
+                                .onTapGesture {
+                                    
                             }
+                             
+                        
                     }
                 }
             }
@@ -52,24 +59,38 @@ struct MovieSectionView: View {
     
     @ViewBuilder
     private func createSectionView(section:MovieSection,movie:Movie)-> some View{
+        
+        
+        NavigationLink {
+//            Text(movie.title ?? "")
+            MovieDetailView(movie: movie)
+        } label: {
+            switch section.endpoint{
+            case .popular:
+                    CustomCardView(movie: movie)
 
-        switch section.endpoint{
-        case .popular:
-            CustomCardView(movie: movie)
-            
-        case .topRated:
-            BackDropCardView(movie: movie)
-                .aspectRatio(16/9, contentMode: .fit)
-                .frame(height: 160)
+            case .topRated:
+                
+                
+                BackDropCardView(movie: movie)
+                    .aspectRatio(16/9, contentMode: .fit)
+                    .frame(height: 160)
+                
 
-        case .upcoming:
-            CustomCardView(movie: movie)
-                .frame(height: 180)
+            case .upcoming:
+                CustomCardView(movie: movie)
+                    .shadow(radius: 4)
+                    .frame(height: 180)
 
-        case .nowPlaying:
-            PosterCardView(movie: movie)
+            case .nowPlaying:
+                PosterCardView(movie: movie)
+                   
+            }
         }
+        .buttonStyle(.plain)
     }
+    
+    
 }
 
 struct MovieSectionView_Previews: PreviewProvider {

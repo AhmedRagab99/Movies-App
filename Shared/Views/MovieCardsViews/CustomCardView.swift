@@ -10,16 +10,17 @@ import SwiftUI
 struct CustomCardView: View {
     let movie:Movie
     
+    
     var body: some View {
         
             ZStack {
                 
                 AsyncImageView(imageUrl: movie.posterURL)
+
                     .aspectRatio(contentMode: .fill)
                     .frame(maxHeight: 280)
-                    
+       
             }
-            
             .cornerRadius(8)
             .shadow(radius: 4)
             .padding(.horizontal)

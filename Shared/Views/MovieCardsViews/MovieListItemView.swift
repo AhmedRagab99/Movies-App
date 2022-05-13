@@ -12,38 +12,46 @@ struct MovieListItemView: View {
     @EnvironmentObject private var movieBookmarkViewModel:MovieBookmarkViewModel
     
     var body: some View {
+        
+    
         HStack(spacing:16){
-            AsyncImageView(imageUrl: movie.posterURL)
-                .aspectRatio(contentMode: .fit)
-                .cornerRadius(5)
-                .frame(width: 80, height: 80)
-                .cornerRadius(5)
-            VStack(alignment:.leading,spacing:8){
-                Text(movie.title ?? "")
-                    .font(.headline)
-                HStack {
-                    Text(movie.ratingText)
-                        .foregroundColor(Color(UIColor.systemYellow))
-                        .font(.caption2)
-                        .lineSpacing(4)
-                    Text(movie.scoreText)
-                        
-                }
-            }
-            Spacer()
 
-                Image(systemName: movieBookmarkViewModel.isBookmarked(for: movie) ? "bookmark.fill":"bookmark")
-                .onTapGesture {
-                    withAnimation{
-                    movieBookmarkViewModel.toggleBookmark(for: movie)
+            NavigationLink {
+                MovieDetailView(movie: movie)
+            } label: {
+                AsyncImageView(imageUrl: movie.posterURL)
+                    .aspectRatio(contentMode: .fit)
+                    .cornerRadius(5)
+                    .frame(width: 80, height: 80)
+                    .cornerRadius(5)
+                VStack(alignment:.leading,spacing:8){
+                    Text(movie.title ?? "")
+                        .font(.headline)
+                        .lineLimit(3)
+                    HStack {
+                        Text(movie.ratingText)
+                            .foregroundColor(Color(UIColor.systemYellow))
+                            .font(.caption2)
+                            .lineSpacing(4)
+                        Text(movie.scoreText)
+                            
                     }
                 }
-                
-                
-//            }.padding(.horizontal)
+                Spacer()
+
+                    Image(systemName: movieBookmarkViewModel.isBookmarked(for: movie) ? "bookmark.fill":"bookmark")
+                    .onTapGesture {
+                        withAnimation{
+                        movieBookmarkViewModel.toggleBookmark(for: movie)
+                        }
+                    }
+                    .padding()
+            }
+            .buttonStyle(.plain)
+
+            
             
         }
-        //        .padding()
         .background(Color(UIColor.clear))
         .cornerRadius(20)
         .shadow(radius: 3)

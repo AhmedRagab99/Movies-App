@@ -11,6 +11,7 @@ struct HomeMoviesView: View {
     @StateObject var viewModel = MoviesViewModelFactory.getMoviesViewModel()
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State var endPoint:MovieListEndPoints = .topRated
+    @State var show:Bool = false
 
     var body: some View{
         rootView
@@ -24,6 +25,8 @@ struct HomeMoviesView: View {
             homeGridView
                 .padding()
                 .shadow(radius: 5)
+                
+              
         default:
             homeListView
         }
@@ -34,6 +37,7 @@ struct HomeMoviesView: View {
         RefreshableScrollView(title: "Pull Down", tintColor: .purple) {
             if let section = viewModel.sections.first {
                 MovieGridView(movies: section.movies)
+                    
             }
         } onRefresh: {
             print("refresh")

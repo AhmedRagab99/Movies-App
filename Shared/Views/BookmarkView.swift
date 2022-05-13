@@ -15,6 +15,7 @@ struct BookmarkView: View {
         List{
             ForEach(movies) { item in
                 MovieListItemView(movie: item)
+                
                     .padding()
                     
             }

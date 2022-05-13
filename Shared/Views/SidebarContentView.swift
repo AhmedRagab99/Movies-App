@@ -49,6 +49,7 @@ struct SidebarContentView: View {
                 .padding()
         case .category(let category):
             HomeMoviesView(endPoint:category)
+            
         }
     }
 }
