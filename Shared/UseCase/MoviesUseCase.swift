@@ -12,10 +12,25 @@ protocol MoviesUseCaseProtocol{
     func fetchMoviesFromEndpoints(
       _ endpoints: [MovieListEndPoints]) async throws -> [MovieSection]
     func fetchMovies(from endpoint: MovieListEndPoints) async  throws -> [Movie]
+    func fetchSimilarMovies(movieId:String) async throws -> [Movie]
 }
 
 
 class MoviesUseCase:MoviesUseCaseProtocol{
+    
+    func fetchSimilarMovies(movieId: String) async throws -> [Movie] {
+        if let movieRepo = movieRepo {
+            do {
+                let movies = try await movieRepo.fetchSimilarMovies(movieId: movieId)
+                return movies
+                
+            } catch {
+                throw error
+            }
+        }
+        throw MoviesAppError.geniricError
+    }
+    
     let movieRepo:MoviesRepoProtocol?
     
     init(movieRepo:MoviesRepoProtocol) {

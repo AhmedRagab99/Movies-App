@@ -1,12 +1,35 @@
 import SwiftUI
+
+
+enum MovieReviewViewModelFactory{
+    static func getMovieReviewViewModel()-> MovieReviewsViewModel{
+        let repo:MovieReviewRepoProtocol = MovieReviewRepo()
+        let useCase:MovieReviewsUseCaseProtocol = MovieReviewsUseCase(movieReviewsRepo: repo)
+        let viewModel = MovieReviewsViewModel(movieReviewUseCase: useCase)
+        return viewModel
+    }
+}
+
+
+enum CastViewModelFactory{
+    static func getCastViewModel()->CastViewModel{
+        let repo:CastRepoProtocol = CastRepo()
+        let useCase:CastUseCaseProtocol = CastUseCase(castRepo: repo)
+        let viewModel = CastViewModel(castUseCase: useCase)
+        return viewModel
+    }
+}
+
+
 struct MovieDetailView: View {
     @EnvironmentObject private var movieBookmarkViewModel:MovieBookmarkViewModel
-    
+    @StateObject private var movieReviewViewModel = MovieReviewViewModelFactory.getMovieReviewViewModel()
+    @StateObject private var moviesViewModel = MoviesViewModelFactory.getMoviesViewModel()
+    @State private var castViewModel = CastViewModelFactory.getCastViewModel()
     var movie: Movie
     @State private var selectedColorIndex = 0
-    let columns = [GridItem(.adaptive(minimum: 80, maximum: 280))]
     @Environment (\.horizontalSizeClass) var horizontalClass
-
+    
     
     var body: some View {
 #if os(iOS)
@@ -22,7 +45,6 @@ struct MovieDetailView: View {
             ScrollView(.vertical,showsIndicators: false){
                 AsyncImageView(imageUrl:  movie.posterURL)
                     .frame(maxHeight:300)
-                
                 Spacer()
                 VStack {
                     VStack(alignment: .leading, spacing: 16) {
@@ -41,47 +63,90 @@ struct MovieDetailView: View {
                             }
                             Text(movie.scoreText)
                             Spacer()
-                       
-                       
+                            
+                            
                             Image(systemName: movieBookmarkViewModel.isBookmarked(for: movie) ? "bookmark.fill":"bookmark")
-                            .onTapGesture {
-                                withAnimation{
-                                movieBookmarkViewModel.toggleBookmark(for: movie)
+                                .onTapGesture {
+                                    withAnimation{
+                                        movieBookmarkViewModel.toggleBookmark(for: movie)
+                                    }
                                 }
-                            }
-                            .padding(.trailing)
-                                
-                                
+                                .padding(.trailing)
+                            
+                            
                         }
                     }
                     .padding()
                     
                     
                     Picker("Favorite Color", selection: $selectedColorIndex, content: {
-                        Text("Cast").tag(0)
-                        Text("similar").tag(1)
+                        Text("Similar").tag(0)
+                        Text("Cast").tag(1)
                         Text("reviews").tag(2)
                     })
                     .pickerStyle(SegmentedPickerStyle()) // <1>
                     .padding()
                     
-                    VStack{
+                    
                     switch selectedColorIndex{
-                    case 0:
-                        CastListItemView(movie: movie)
                     case 1:
-                        SimilarMovieView(movie: movie)
+                      movieCastView
+                    case 0:
+                        similarMoviesView
                     case 2:
-                        ReviewsView(movie:  movie)
+                        movieReviewsView
+                        
                     default:
-                        ReviewsView(movie:  movie)
-                    }
+                        similarMoviesView
                     }
                 }
             }
         }
+        .task{
+            await loadSimilarMovies(movieId: movie.id?.description ?? "")
+            await loadMovieCast(movieId: movie.id?.description ?? "")
+            await loadReviews(movieId: movie.id?.description ?? "")
+            
+        }
+    }
     
-        
+    @ViewBuilder
+    private var movieReviewsView:some View{
+        if movieReviewViewModel.phaseState.value?.count  ?? 0 > 1 {
+            MovieReviewsView(reviews: movieReviewViewModel.phaseState.value ?? [])
+        } else {
+            EmptyPlaceholderView(text: "No Reviews found", image: Image(systemName: "film"))
+        }
+    }
+    
+    @ViewBuilder
+    private var movieCastView:some View{
+        if castViewModel.castState.value?.count ?? 0 > 1{
+            CastListItemView(cast: castViewModel.castState.value ?? [])
+        }
+        else{
+            EmptyPlaceholderView(text: "No Cast Found", image: Image(systemName: "film"))
+        }
+    }
+    
+    @ViewBuilder
+    private var similarMoviesView:some View{
+        if moviesViewModel.similarMoviesState.value?.count ?? 0 > 1{
+            SimilarMovieView(movies: moviesViewModel.similarMoviesState.value ?? [])
+            } else {
+                EmptyPlaceholderView(text: "No Similar Movies found", image: Image(systemName: "film"))
+            }
+    }
+    
+    private func loadSimilarMovies(movieId:String) async{
+        await moviesViewModel.fetchSimilarMovies(movieId: movieId)
+    }
+    
+    private func loadMovieCast(movieId:String) async{
+        await castViewModel.getMovieCast(movieId: movieId)
+    }
+    private func loadReviews(movieId:String) async {
+        await movieReviewViewModel.getMovieReviews(movieId: movieId)
     }
     
 }
@@ -91,76 +156,5 @@ struct MovieDetailView_Previews: PreviewProvider {
     static var previews: some View {
         MovieDetailView(movie: .stubbedMovies[0])
             .environmentObject(movieBookmarkViewModel)
-    }
-}
-
-
-struct SimilarMovieView:View{
-    let movie:Movie
-    
-    var body: some View{
-        LazyVGrid(columns:
-                UIDevice.current.userInterfaceIdiom != .pad ?
-                  [GridItem(.adaptive(minimum: 120, maximum: 260))]: [GridItem(.adaptive(minimum: 200, maximum: 360))]
-                  ,spacing: 20){
-                            ForEach(0 ..< 10) { item in
-                               CustomCardView(movie: movie)
-                      
-                        }
-                    
-                    }
-        .padding()
-    }
-}
-
-// cast view
-struct CastListItemView: View {
-    let movie:Movie
-    var body: some View {
-
-        
-        LazyVGrid(columns: UIDevice.current.userInterfaceIdiom != .pad ?
-                  [GridItem(.adaptive(minimum: 120, maximum: 260))]: [GridItem(.adaptive(minimum: 200, maximum: 360))],spacing: 20){
-                            ForEach(0 ..< 10) { item in
-                                AsyncImageView(imageUrl: movie.posterURL)
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                                    .padding()
-                      
-                        }
-                    }
-
-        }
-    }
-
-
-struct ReviewsView: View {
-    var movie:Movie
-    var body: some View {
-        ForEach(0 ..< 5) { item in
-            HStack(alignment:.center,spacing: 0){
-                AsyncImageView(imageUrl: movie.posterURL)
-                    .aspectRatio(contentMode: .fit)
-                    .clipShape(Circle())
-                    .frame(height: 80, alignment: .leading)
-                    .padding()
-                VStack(alignment: .leading,spacing:0){
-                    HStack {
-                        Text("John Chard")
-                        Text(movie.releaseDate ?? "")
-                            .foregroundColor(Color.secondary)
-                        
-                    }
-                    Text("(As I'm writing this review, Darth Vader's theme music begins to build in my mind...)Well, it actually has a title, what the Darth Vader theme. And that title is \"The Imperial March\", composed by the great John ")
-                        .lineLimit(4)
-                        .foregroundColor(Color.secondary)
-                        .padding(4)
-                }
-                Spacer()
-            }
-            
-            
-            .padding()
-        }
     }
 }

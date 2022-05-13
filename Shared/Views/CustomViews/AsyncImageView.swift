@@ -19,6 +19,8 @@ struct AsyncImageView: View {
 
             case .failure:
                 Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
                     
             case .success(let image):
                 image

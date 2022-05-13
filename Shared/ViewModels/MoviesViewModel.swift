@@ -8,6 +8,8 @@ import Foundation
 
 @MainActor class MoviesViewModel:ObservableObject{
     @Published var phaseState:DataFetchPhase<[MovieSection]> = .empty
+    @Published var similarMoviesState:DataFetchPhase<[Movie]> = .empty
+    
 //    @Published var movie
     private  var movieUseCase:MoviesUseCaseProtocol?
     
@@ -16,6 +18,22 @@ import Foundation
     }
     var sections: [MovieSection] {
         phaseState.value ?? []
+    }
+    
+    func fetchSimilarMovies(movieId: String) async   {
+        if Task.isCancelled { return }
+        similarMoviesState = .empty
+        if let movieUseCase = movieUseCase {
+            do {
+                if Task.isCancelled { return }
+                
+                let movies  = try await movieUseCase.fetchSimilarMovies(movieId: movieId)
+                similarMoviesState = .success(movies)
+            } catch  {
+                if Task.isCancelled { return }
+                similarMoviesState = .failure(error)
+            }
+        }
     }
     
      func loadMoviesFromAllEndpoints(invalidateCache:Bool) async {
