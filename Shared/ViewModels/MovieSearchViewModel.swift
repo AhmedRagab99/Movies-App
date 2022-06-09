@@ -28,6 +28,7 @@ import Combine
      func startObserve() {
         guard cancellables.isEmpty else { return }
         
+         
         $query
             .filter { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
             .sink { [weak self] _ in
@@ -62,11 +63,14 @@ import Combine
             do {
                 if Task.isCancelled { return }
                 guard trimmedQuery == self.trimmedQuery else { return }
+                
                 let movies  = try await movieSearchUseCase.searchMovie(query: query)
                 phaseState = .success(movies)
             } catch  {
                 if Task.isCancelled { return }
+                
                 guard trimmedQuery == self.trimmedQuery else { return }
+                
                 phaseState = .failure(error)
             }
         }

@@ -11,6 +11,7 @@ extension Movie {
     
     static var stubbedMovies: [Movie] {
         let response: MovieResponse? = try? Bundle.main.loadAndDecodeJSON(filename: "Movie-list")
+        
         return response!.results ?? []
     }
     

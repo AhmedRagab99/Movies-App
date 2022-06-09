@@ -19,6 +19,7 @@ enum MovieListEndPoints:String,CaseIterable,Identifiable{
     var description:String{
         switch self {
         case .nowPlaying:
+            
             return "Now Playing"
         case .upcoming:
             return "Upcoming"
@@ -47,6 +48,7 @@ enum MovieListEndPoints:String,CaseIterable,Identifiable{
     var systemImage: String {
         switch self {
         case .nowPlaying:
+            
             return "timer"
         case .upcoming:
             return "calendar"

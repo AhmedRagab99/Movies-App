@@ -22,6 +22,7 @@ struct ReviewsModelResult: Codable ,Identifiable{
     
     var yearText: String {
         guard let releaseDate = self.updatedAt else  {
+            
             print("updated date",self.updatedAt)
             return "n/a"
         }
@@ -30,6 +31,7 @@ struct ReviewsModelResult: Codable ,Identifiable{
     static private let yearFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy"
+        
         return formatter
     }()
    
@@ -42,6 +44,7 @@ struct AuthorDetails: Codable {
     let rating: Int?
 
     var avatarPathURL: URL {
+        
         return URL(string: "https://image.tmdb.org/t/p/w500\(avatarPath ?? "")")!
     }
     

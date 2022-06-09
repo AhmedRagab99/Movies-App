@@ -12,10 +12,13 @@ protocol CastRepoProtocol{
 
 class CastRepo:CastRepoProtocol{
     private  var movieBaseAppStore:MoviesAppBaseStoreProtocol = MoviesAppBaseStore()
+    
     private let baseEndPointUrl = "\(Utils.BaseApiUrl)/movie/"
     
     func getCastForMovie(movieId: String) async throws -> [Cast] {
-        guard let url = URL(string: "\(baseEndPointUrl)\(movieId)/credits") else {  throw MoviesAppError.invalidEndPoints}
+        guard let url = URL(string: "\(baseEndPointUrl)\(movieId)/credits")
+        
+        else {  throw MoviesAppError.invalidEndPoints}
         do{
             let movieReviews: ActorModel =  try await movieBaseAppStore.loadURLAndDecode(url: url, params: nil)
             return movieReviews.cast ?? []

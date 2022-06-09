@@ -63,6 +63,7 @@ class MovieBookmarkViewModel:ObservableObject{
     }
     
     @MainActor func removeBookmark(with indexSet:IndexSet){
+        
         bookmarks.remove(atOffsets: indexSet)
         bookmarkUpdated()
     }

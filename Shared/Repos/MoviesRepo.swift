@@ -18,12 +18,15 @@ protocol MoviesRepoProtocol{
 class MoviesRepo:MoviesRepoProtocol{
     // MARK: - properties
     private  var movieBaseAppStore:MoviesAppBaseStoreProtocol = MoviesAppBaseStore()
+    
     private let baseEndPointUrl = "\(Utils.BaseApiUrl)/movie/"
     
     // MARK: Functions
     
     func fetchSimilarMovies(movieId: String) async throws -> [Movie] {
-        guard let url = URL(string: "\(baseEndPointUrl)\(movieId)/similar") else {  throw MoviesAppError.invalidEndPoints}
+        guard let url = URL(string: "\(baseEndPointUrl)\(movieId)/similar")
+        
+        else {  throw MoviesAppError.invalidEndPoints}
         do{
             let movies:MovieResponse =  try await movieBaseAppStore.loadURLAndDecode(url: url, params: nil)
             return movies.results ?? []
