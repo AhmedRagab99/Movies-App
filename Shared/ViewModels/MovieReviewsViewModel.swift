@@ -17,14 +17,17 @@ class MovieReviewsViewModel:ObservableObject{
     
    @MainActor func  getMovieReviews(movieId:String) async {
         if Task.isCancelled { return }
+       
         phaseState = .empty
         if let movieReviewUseCase = movieReviewUseCase {
             do {
                 if Task.isCancelled { return }
+                
                 let movieReviews  = try await movieReviewUseCase.getMovieReviews(movieId: movieId)
                 phaseState = .success(movieReviews)
             } catch  {
                 if Task.isCancelled { return }
+                
                 phaseState = .failure(error)
             }
         }

@@ -13,12 +13,15 @@ protocol MovieReviewRepoProtocol{
 
 class MovieReviewRepo:MovieReviewRepoProtocol{
     private  var movieBaseAppStore:MoviesAppBaseStoreProtocol = MoviesAppBaseStore()
+    
     private let baseEndPointUrl = "\(Utils.BaseApiUrl)/movie/"
     
    
     func getMovieReviews(movieId: String) async throws -> [ReviewsModelResult] {
         
-        guard let url = URL(string: "\(baseEndPointUrl)\(movieId)/reviews") else {  throw MoviesAppError.invalidEndPoints}
+        guard let url = URL(string: "\(baseEndPointUrl)\(movieId)/reviews")
+        
+        else {  throw MoviesAppError.invalidEndPoints}
         do{
             let movieReviews: ReviewsModel =  try await movieBaseAppStore.loadURLAndDecode(url: url, params: nil)
             return movieReviews.results ?? []

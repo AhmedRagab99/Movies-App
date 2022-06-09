@@ -16,14 +16,17 @@ class CastViewModel:ObservableObject{
     
     @MainActor func getMovieCast(movieId:String) async{
         if Task.isCancelled {return}
+        
         castState = .empty
         if let castUseCase = castUseCase {
             do{
                 if Task.isCancelled {return}
+                
                 let cast = try await  castUseCase.getCastForMovie(movieId: movieId)
                 castState = .success(cast)
             }catch{
                 if Task.isCancelled {return}
+                
                 castState  = .failure(error)
             }
         }
